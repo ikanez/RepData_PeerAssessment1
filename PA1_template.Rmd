@@ -1,25 +1,49 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
+title: "Peer Assessment 1"
+author: "Hafidz Zulkifli"
+date: "Monday, May 18, 2015"
+output: html_document
 ---
 
+Assignment
 
-## Loading and preprocessing the data
+This assignment will be described in multiple parts. You will need to write a report that answers the questions detailed below. Ultimately, you will need to complete the entire assignment in a single R markdown document that can be processed by knitr and be transformed into an HTML file.
+
+Throughout your report make sure you always include the code that you used to generate the output you present. When writing code chunks in the R markdown document, always use echo = TRUE so that someone else will be able to read the code. This assignment will be evaluated via peer assessment so it is essential that your peer evaluators be able to review the code for your analysis.
+
+For the plotting aspects of this assignment, feel free to use any plotting system in R (i.e., base, lattice, ggplot2)
+
+Fork/clone the GitHub repository created for this assignment. You will submit this assignment by pushing your completed files into your forked repository on GitHub. The assignment submission will consist of the URL to your GitHub repository and the SHA-1 commit ID for your repository state.
+
+1. Loading and preprocessing the data
+
+```{r, echo=TRUE}
+activity <- read.csv("D:/Self_Development/Coursera - JHU/5. Reproducible Research/1/activity.csv" )
+no_na_activity <- activity[complete.cases(activity),] 
+```
+
+In the last line above, we set aside another data frame that excludes non NA.
+
+2. What is mean total number of steps taken per day?
+```{r, echo=TRUE}
+library(plyr)
+step_stat <- ddply(no_na_activity,~date,summarise,sum=sum(steps),mean=mean(steps),median=median(steps))
+hist(step_stat$sum,  main="Sum of Steps Taken Each Day", col="red", xlab="Sum of Steps")
+step_stat$mean
+step_stat$median
+```
+
+3. What is the average daily activity pattern? Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+
+```{r, echo=TRUE}
+step_stat_2 <- ddply(no_na_activity,.(interval),summarise,sum=sum(steps),mean=mean(steps),median=median(steps))
+library(ggplot2)
+library(scales)
+ggplot(step_stat_2, aes(step_stat_2$interval,step_stat_2$mean )) + geom_line() + scale_x_continuous(breaks=pretty_breaks(n=10)) + scale_y_continuous(breaks=pretty_breaks(n=10))
+```
+
+Looks like the maximum number of steps are around the 800 5-minute interval
+
+4. Imputing missing values
 
 
-
-## What is mean total number of steps taken per day?
-
-
-
-## What is the average daily activity pattern?
-
-
-
-## Imputing missing values
-
-
-
-## Are there differences in activity patterns between weekdays and weekends?
